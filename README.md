@@ -3,12 +3,12 @@ Docker for hosting Virtuoso.
 
 The Virtuoso is built from a specific commit SHA in https://github.com/openlink/virtuoso-opensource.
 
-The Docker image tags include the Virtuoso version installed in the container. The following [versions are currently available](https://hub.docker.com/r/tenforce/virtuoso/tags/):
-- 1.3.2-virtuoso7.2.5 (or virtuoso7.2.5 for latest)
-- 1.3.2-virtuoso7.2.4 (or virtuoso7.2.4 for latest)
-- 1.3.2-virtuoso7.2.2 (or virtuoso7.2.2 for latest)
-- 1.3.2-virtuoso7.2.1 (or virtuoso7.2.1 for latest)
-- 1.3.2-virtuoso7.2.0 (or virtuoso7.2.0 for latest)
+The Docker image tags reflects the Virtuoso version installed in the container. The following [versions are currently available](https://hub.docker.com/r/rendpencil/virtuoso/tags/):
+- 7.2.5
+- 7.2.4
+- 7.2.2
+- 7.2.1
+- 7.2.0
 
 ## Running your Virtuoso
     docker run --name my-virtuoso \
@@ -17,7 +17,7 @@ The Docker image tags include the Virtuoso version installed in the container. T
         -e SPARQL_UPDATE=true \
         -e DEFAULT_GRAPH=http://www.example.com/my-graph \
         -v /my/path/to/the/virtuoso/db:/data \
-        -d tenforce/virtuoso
+        -d redpencil/virtuoso
 
 The Virtuoso database folder is mounted in `/data`.
 
@@ -28,7 +28,7 @@ The image can also be configured and used via docker-compose.
 
 ```
 db:
-  image: tenforce/virtuoso:1.3.1-virtuoso7.2.2
+  image: redpencil/virtuoso:7.2.5
   environment:
     SPARQL_UPDATE: "true"
     DEFAULT_GRAPH: "http://www.example.com/my-graph"
@@ -73,7 +73,7 @@ Validate the `ll_state` of the load. If `ll_state` is 2, the load completed.
 For more information, see http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtBulkRDFLoader
 
 ### Automatically
-By default, any data that is put in the `toLoad` directory in the Virtuoso database folder (`/my/path/to/the/virtuoso/db/toLoad`) is automatically loaded into Virtuoso on the first startup of the Docker container. The default graph is set by the DEFAULT_GRAPH environment variable, which defaults to `http://localhost:8890/DAV`.
+By default, any data that is put in the `toLoad` directory in the Virtuoso database folder (`/my/path/to/the/virtuoso/db/toLoad`) is automatically loaded into Virtuoso on the first startup of the Docker container. The default graph is set by the `DEFAULT_GRAPH` environment variable, which defaults to `http://localhost:8890/DAV`.
 
 ## Creating a backup
 A virtuoso backup can be created by executing the appropriate commands via the ISQL interface.
@@ -90,7 +90,7 @@ docker exec -i virtuoso_container isql-v <<EOF
 To restore a backup, stop the running container and restore the database using a new container.
 
 ```
-docker run --rm  -it -v path-to-your-database:/data tenforce/virtuoso virtuoso-t +restore-backup backups/backup_ +configfile /data/virtuoso.ini
+docker run --rm -it -v path-to-your-database:/data redpencil/virtuoso virtuoso-t +restore-backup backups/backup_ +configfile /data/virtuoso.ini
 ```
 
 The new container will exit once the backup has been restored, you can then restart the original db container.
@@ -105,11 +105,11 @@ docker run --name my-virtuoso \
             -e SPARQL_UPDATE=true \
             -e BACKUP_PREFIX=backup_ \_
             -v path-to-your-database:/data \
-            -d tenforce/virtuoso
+            -d redpencil/virtuoso
 ```
 
 ## Contributing
 
 Contributions to this repository are welcome, please create a pull request on the master branch.
 
-New features will be tested on tenforce/virtuoso:latest first. Once the image is verified, version branches will be rebased on master.
+New features will be tested on redpencil/virtuoso:latest first. Once the image is verified, version branches will be rebased on master.
