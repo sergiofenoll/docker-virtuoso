@@ -14,11 +14,6 @@ fi
 chmod +x /clean-logs.sh
 mv /clean-logs.sh . 2>/dev/null
 
-original_port=`crudini --get virtuoso.ini HTTPServer ServerPort`
-# NOTE: prevents virtuoso to expose on port 8890 before we actually run
-#		the server
-crudini --set virtuoso.ini HTTPServer ServerPort 27015
-
 if [ ! -f "$SETTINGS_DIR/.config_set" ];
 then
   echo "Converting environment variables to ini file"
@@ -34,11 +29,16 @@ then
   echo "Finished converting environment variables to ini file"
 fi
 
+# NOTE: Make a temporary copy of virtuoso.ini to start Virtuoso
+#       for data loading on another port
+cp virtuoso.ini /tmp/virtuoso.ini
+crudini --set /tmp/virtuoso.ini HTTPServer ServerPort 27015
+
 if [ ! -f ".backup_restored" -a -d "backups" -a ! -z "$BACKUP_PREFIX" ] ;
 then
     echo "Start restoring a backup with prefix $BACKUP_PREFIX"
     cd backups
-    virtuoso-t +restore-backup $BACKUP_PREFIX +configfile /data/virtuoso.ini
+    virtuoso-t +restore-backup $BACKUP_PREFIX +configfile /tmp/virtuoso.ini
     if [ $? -eq 0 ]; then
         cd /data
         echo "`date +%Y-%m-%dT%H:%M:%S%:z`" > .backup_restored
@@ -52,7 +52,7 @@ then
   touch /sql-query.sql
   if [ "$DBA_PASSWORD" ]; then echo "user_set_password('dba', '$DBA_PASSWORD');" >> /sql-query.sql ; fi
   if [ "$SPARQL_UPDATE" = "true" ]; then echo "GRANT SPARQL_UPDATE to \"SPARQL\";" >> /sql-query.sql ; fi
-  virtuoso-t +wait && isql-v -U dba -P dba < /dump_nquads_procedure.sql && isql-v -U dba -P dba < /sql-query.sql
+  virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P dba < /dump_nquads_procedure.sql && isql-v -U dba -P dba < /sql-query.sql
   kill "$(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')"
   echo "`date +%Y-%m-%dT%H:%M:%S%:z`" >  .dba_pwd_set
 fi
@@ -70,11 +70,11 @@ then
     echo "exec('checkpoint');" >> /load_data.sql
     echo "WAIT_FOR_CHILDREN; " >> /load_data.sql
     echo "$(cat /load_data.sql)"
-    virtuoso-t +wait && isql-v -U dba -P "$pwd" < /load_data.sql
+    virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P "$pwd" < /load_data.sql
     kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
     echo "`date +%Y-%m-%dT%H:%M:%S%:z`" > .data_loaded
 fi
 
-crudini --set virtuoso.ini HTTPServer ServerPort ${VIRT_HTTPServer_ServerPort:-$original_port}
+rm /tmp/virtuoso.ini
 
 exec virtuoso-t +wait +foreground
