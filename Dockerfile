@@ -25,8 +25,9 @@ ENV PATH /usr/local/virtuoso-opensource/bin/:$PATH
 # Add Virtuoso config
 COPY virtuoso.ini /virtuoso.ini
 
-# Add dump_nquads_procedure
-COPY dump_nquads_procedure.sql /dump_nquads_procedure.sql
+# Add sql scripts
+COPY dump_nquads_procedure.sql /docker-virtuoso/dump_nquads_procedure.sql
+COPY add_cors.sql /docker-virtuoso/add_cors.sql
 
 # Add Virtuoso log cleaning script
 COPY clean-logs.sh /clean-logs.sh

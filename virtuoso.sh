@@ -52,7 +52,7 @@ then
   touch /sql-query.sql
   if [ "$DBA_PASSWORD" ]; then echo "user_set_password('dba', '$DBA_PASSWORD');" >> /sql-query.sql ; fi
   if [ "$SPARQL_UPDATE" = "true" ]; then echo "GRANT SPARQL_UPDATE to \"SPARQL\";" >> /sql-query.sql ; fi
-  virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P dba < /dump_nquads_procedure.sql && isql-v -U dba -P dba < /sql-query.sql
+  virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P dba < /docker-virtuoso/dump_nquads_procedure.sql && isql-v -U dba -P dba < /sql-query.sql
   kill "$(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')"
   echo "`date +%Y-%m-%dT%H:%M:%S%:z`" >  .dba_pwd_set
 fi
@@ -75,6 +75,12 @@ then
     echo "`date +%Y-%m-%dT%H:%M:%S%:z`" > .data_loaded
 fi
 
-rm /tmp/virtuoso.ini
+if [ ! -z "$ENABLE_CORS" ];
+then
+    echo "enabling cors on SPARQL endpoint"
+    virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P dba < /docker-virtuoso/add_cors.sql
+    kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
+fi
 
+rm /tmp/virtuoso.ini
 exec virtuoso-t +wait +foreground

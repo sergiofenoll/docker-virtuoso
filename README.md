@@ -45,6 +45,9 @@ The `dba` password can be set at container start up via the `DBA_PASSWORD` envir
 ### SPARQL update permission
 The `SPARQL_UPDATE` permission on the SPARQL endpoint can be granted by setting the `SPARQL_UPDATE` environment variable to `true`.
 
+### CORS
+You may want to enable basic CORS headers on the SPARQL endpoint, this can be done by setting the `ENABLE_CORS` environment variable to any value. If not set (the default), no cors headers are sent.
+
 ### .ini configuration
 All properties defined in `virtuoso.ini` can be configured via the environment variables. The environment variable should be prefixed with `VIRT_` and have a format like `VIRT_$SECTION_$KEY`. `$SECTION` and `$KEY` are case sensitive. They should be CamelCased as in `virtuoso.ini`. E.g. property `ErrorLogFile` in the `Database` section should be configured as `VIRT_Database_ErrorLogFile=error.log`.
 
