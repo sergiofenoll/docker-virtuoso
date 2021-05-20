@@ -2,13 +2,7 @@
 Docker for hosting Virtuoso.
 
 The Virtuoso is built from a specific commit SHA in https://github.com/openlink/virtuoso-opensource.
-
-The Docker image tags reflects the Virtuoso version installed in the container. The following [versions are currently available](https://hub.docker.com/r/rendpencil/virtuoso/tags/):
-- 7.2.5
-- 7.2.4
-- 7.2.2
-- 7.2.1
-- 7.2.0
+This image is currently build from commit [17c4ba1d5825822d8380ef8d9f978e2d57f4768f](https://github.com/openlink/virtuoso-opensource/commit/17c4ba1d5825822d8380ef8d9f978e2d57f4768f). You can build this image from a different commit by providing the correct commit id as the `VIRTUOSO_COMMIT` build argument.
 
 ## Running your Virtuoso
     docker run --name my-virtuoso \
