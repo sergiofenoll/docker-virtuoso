@@ -1,7 +1,7 @@
 FROM ubuntu:18.04 as builder
 
 # Set Virtuoso commit SHA to Virtuoso 7.2.6.1 release (2021-06-22)
-ARG VIRTUOSO_COMMIT 64663f91c657aec14bbdcef8b6e5c9b6ac89cb8b
+ARG VIRTUOSO_COMMIT=64663f91c657aec14bbdcef8b6e5c9b6ac89cb8b
 
 RUN apt-get update
 # installing libssl1.0-dev instead of libssl1.1 as a Workaround for #663
