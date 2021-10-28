@@ -38,6 +38,7 @@ COPY virtuoso.sh /virtuoso.sh
 
 RUN ln -s /usr/local/virtuoso-opensource/db /data
 
+VOLUME /data
 WORKDIR /data
 EXPOSE 8890
 EXPOSE 1111
