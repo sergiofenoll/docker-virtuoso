@@ -16,6 +16,19 @@
       "mounts": {
           "app": "/project/"
         }
+    },
+        {
+      "documentation": {
+        "command": "maintenance",
+        "description": "Execute basic maintenance commands.\n Parameters:\n  command : needs to be one of 'checkpoint', 'vacuum', 'dump_quads'\n  hostname: default triplestore\n  username: default dba\n  password: default dba",
+        "arguments": ["command", "hostname", "username", "password"]
+      },
+      "environment": {
+        "image": "redpencil/virtuoso",
+        "interactive": false,
+        "script": "virtuoso/maintenance.sh",
+        "join_networks": true
+      }
     }
   ]
 }
