@@ -1,0 +1,21 @@
+{
+  "version": "0.1",
+  "scripts": [
+    {
+      "documentation": {
+        "command": "create-backup",
+        "description": "A virtuoso backup will be created db/backups.\n Parameters:\n  prefix: default backup_${DATE}\n  hostname: default triplestore\n  username: default dba\n  password: default dba",
+        "arguments": ["prefix", "hostname", "username", "password"]
+      },
+      "environment": {
+        "image": "redpencil/virtuoso",
+        "interactive": false,
+        "script": "virtuoso/create-backup.sh",
+        "join_networks": true
+      },
+      "mounts": {
+          "app": "/project/"
+        }
+    }
+  ]
+}
