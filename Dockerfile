@@ -36,7 +36,8 @@ COPY clean-logs.sh /clean-logs.sh
 # Add startup script
 COPY virtuoso.sh /virtuoso.sh
 
-RUN ln -s /usr/local/virtuoso-opensource/db /data
+RUN ln -s /usr/local/virtuoso-opensource/var/lib/virtuoso/ /var/lib/virtuoso \
+    && ln -s /var/lib/virtuoso/db /data
 
 VOLUME /data
 WORKDIR /data
