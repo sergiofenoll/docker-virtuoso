@@ -13,8 +13,20 @@ WORKDIR virtuoso-opensource-${VIRTUOSO_COMMIT}
 
 # Build virtuoso from source
 RUN ./autogen.sh
-RUN export CFLAGS="-O2 -m64" && ./configure --disable-bpel-vad --enable-conductor-vad --enable-fct-vad --disable-dbpedia-vad --disable-demo-vad --disable-isparql-vad --disable-ods-vad --disable-sparqldemo-vad --disable-syncml-vad --disable-tutorial-vad --with-readline --program-transform-name="s/isql/isql-v/" \
-        && make && make install
+RUN export CFLAGS="-O2 -m64" \
+    && ./configure \
+        --disable-bpel-vad \
+        --enable-conductor-vad \
+        --enable-fct-vad \
+        --disable-dbpedia-vad \
+        --disable-demo-vad \
+        --disable-isparql-vad \
+        --disable-ods-vad \
+        --disable-sparqldemo-vad \
+        --disable-syncml-vad \
+        --disable-tutorial-vad \
+        --with-readline --program-transform-name="s/isql/isql-v/" \
+    && make && make install
 
 
 FROM ubuntu:18.04
@@ -36,7 +48,8 @@ COPY clean-logs.sh /clean-logs.sh
 # Add startup script
 COPY virtuoso.sh /virtuoso.sh
 
-RUN ln -s /usr/local/virtuoso-opensource/db /data
+RUN ln -s /usr/local/virtuoso-opensource/var/lib/virtuoso/ /var/lib/virtuoso \
+    && ln -s /var/lib/virtuoso/db /data
 
 VOLUME /data
 WORKDIR /data
