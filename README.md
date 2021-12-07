@@ -22,7 +22,7 @@ The image can also be configured and used via docker-compose.
 
 ```
 db:
-  image: redpencil/virtuoso:7.2.5
+  image: redpencil/virtuoso:1.0.0
   environment:
     SPARQL_UPDATE: "true"
     DEFAULT_GRAPH: "http://www.example.com/my-graph"
