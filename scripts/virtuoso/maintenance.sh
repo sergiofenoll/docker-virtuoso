@@ -22,7 +22,7 @@ EOF
         ;;
     "dump_quads")
         isql-v -H $TRIPLESTORE -U $USERNAME -P $PASSWORD <<EOF
-         dump_nquads ('dumps', 1, 10000000, 1);
+         dump_nquads ('dumps', 1, 100000000, 1);
 EOF
         echo "dumped quads to data/db/dumps"
         ;;
