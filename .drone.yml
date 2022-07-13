@@ -55,7 +55,7 @@ data: RIRsbI8DZz2JGGUHsUp4zU5qtnyK/XU3xzTiUkeHIjOzhIH9+/ozwiIFniT3dWBYcQ==
 ---
 kind: secret
 name: docker_password
-data: 7ocNZAPA+djeVNr4lf8RAANxyiDDmilj/42UILm8h25Umh4kkDVvdLG92cSgX2JdXirLEMlNxjw+iA0yLYh1Ug==
+data: ktTk26wyHYZSgupqBNzemhvOtMt2blmjZs4ypB4j8TXz8qxJ4TNW5Vtvu7lDELUeUL5qrUV5vMEAlwFm1t2tLA==
 
 ---
 kind: signature
