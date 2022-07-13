@@ -11,6 +11,7 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+    purge: true
 trigger:
   branch:
   - master
