@@ -1,10 +1,10 @@
 pipeline:
   build-and-push:
     image: plugins/docker
+    secrets: [ docker_username, docker_password ]
     settings:
       repo: redpencil/virtuoso
       tags: latest
-      secrets: [docker_username, docker_password]
     when:
       event:
         - push

@@ -1,9 +1,9 @@
 pipeline:
   build-and-push:
     image: plugins/docker
+    secrets: [ docker_username, docker_password ]
     settings:
       repo: redpencil/virtuoso
-      secrets: [docker_username, docker_password]
       tags: ${CI_REPO_TAG##v} # strips v from the tag
     when:
       event: tag
