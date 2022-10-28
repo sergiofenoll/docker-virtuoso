@@ -20,6 +20,7 @@ RUN export VALUE=$(echo $VIRTUOSO_COMMIT | head -c 7); echo "char * git_head = \
 RUN ./autogen.sh
 RUN export CFLAGS="-O2 -m64" \
     && ./configure \
+        --disable-graphql \
         --disable-bpel-vad \
         --enable-conductor-vad \
         --enable-fct-vad \
