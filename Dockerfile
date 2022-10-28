@@ -10,6 +10,12 @@ RUN wget https://github.com/openlink/virtuoso-opensource/archive/${VIRTUOSO_COMM
 RUN tar xzf ${VIRTUOSO_COMMIT}.tar.gz
 WORKDIR virtuoso-opensource-${VIRTUOSO_COMMIT}
 
+# See https://github.com/openlink/virtuoso-opensource/blob/9cececaca5df32c82576e5390062475bbf5e1cc1/libsrc/Wi/mkgit_head.sh
+# mkgit_head.sh doesn't do what it is expected to do since our downloaded tar doesn't have git history
+# Provide libsrc/Wi/git_head.c manually
+RUN export VALUE=$(echo $VIRTUOSO_COMMIT | head -c 7); echo "#define GIT_HEAD_STR \"$VALUE\"" > libsrc/Wi/git_head.c
+RUN export VALUE=$(echo $VIRTUOSO_COMMIT | head -c 7); echo "char * git_head = \"$VALUE\";" >> libsrc/Wi/git_head.c
+
 # Build virtuoso from source
 RUN ./autogen.sh
 RUN export CFLAGS="-O2 -m64" \
