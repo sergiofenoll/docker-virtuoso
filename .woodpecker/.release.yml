@@ -5,8 +5,6 @@ pipeline:
     settings:
       repo: redpencil/virtuoso
       tags: ${CI_REPO_TAG##v} # strips v from the tag
-    when:
-      event: tag
-      tag: v*
-branches:
-  - master
+when:
+  event: tag
+  tag: v*

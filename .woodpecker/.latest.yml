@@ -5,8 +5,7 @@ pipeline:
     settings:
       repo: redpencil/virtuoso
       tags: latest
-    when:
-      event:
-        - push
-branches:
-  - master
+when:
+  event:
+    - push
+  branch: master
