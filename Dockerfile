@@ -1,5 +1,7 @@
 FROM ubuntu:22.04 as builder
 
+ARG TARGETPLATFORM
+
 # Set Virtuoso commit SHA to Virtuoso 7.2.9 release (2023-02-27)
 ARG VIRTUOSO_COMMIT=795af34a7287f064effd91ed251e6bb711f1f5ee
 
@@ -12,7 +14,11 @@ WORKDIR virtuoso-opensource-${VIRTUOSO_COMMIT}
 
 # Build virtuoso from source
 RUN ./autogen.sh
-RUN export CFLAGS="-O2 -m64" \
+RUN case "$TARGETPLATFORM" in \
+      "linux/amd64") export CFLAGS="-O2 -m64" ;; \
+      "linux/arm64") export CFLAGS="-O2" ;; \
+      *) export CFLAGS="-O" ;; \
+    esac \
     && ./configure \
         --disable-graphql \
         --disable-bpel-vad \
@@ -25,8 +31,8 @@ RUN export CFLAGS="-O2 -m64" \
         --disable-sparqldemo-vad \
         --disable-syncml-vad \
         --disable-tutorial-vad \
-        --with-readline --program-transform-name="s/isql/isql-v/" \
-    && make && make install
+        --with-readline --program-transform-name="s/isql/isql-v/"
+RUN make && make install
 
 
 FROM ubuntu:22.04

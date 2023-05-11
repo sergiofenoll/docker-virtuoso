@@ -1,10 +1,11 @@
 pipeline:
   build-and-push:
-    image: plugins/docker
+    image: woodpeckerci/plugin-docker-buildx
     secrets: [ docker_username, docker_password ]
     settings:
       repo: redpencil/virtuoso
       tags: ${CI_COMMIT_SOURCE_BRANCH/\//-}
+      platforms: linux/amd64,linux/arm64
 when:
   event:
     - pull_request
