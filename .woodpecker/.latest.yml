@@ -1,10 +1,10 @@
 pipeline:
-  build-and-push:
-    image: plugins/docker
+  build-and-push-latest:
+    image: woodpeckerci/plugin-docker-buildx
     secrets: [ docker_username, docker_password ]
     settings:
       repo: redpencil/virtuoso
-      tags: latest
+      platforms: linux/amd64,linux/arm64
 when:
   event:
     - push
