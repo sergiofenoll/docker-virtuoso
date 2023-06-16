@@ -82,15 +82,5 @@ then
     kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
 fi
 
-# NOTE: below command is a workaround for a bug introduced  in 7.2.8
-# see https://community.openlinksw.com/t/sparul-insert-access-denied-even-after-granting-update-permission/3448/9
-# and https://github.com/openlink/virtuoso-opensource/issues/1094
-if [ "$SPARQL_UPDATE" = "true" ];
-then
-  echo "DB.DBA.RDF_DEFAULT_USER_PERMS_SET ('nobody', 7);" > /sql-query.sql
-  virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P dba < /sql-query.sql
-  kill "$(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')"
-fi
-
 rm /tmp/virtuoso.ini
 exec virtuoso-t +wait +foreground
