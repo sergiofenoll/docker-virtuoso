@@ -30,7 +30,7 @@ then
 fi
 
 # NOTE: Make a temporary copy of virtuoso.ini to start Virtuoso
-#       for data loading on another port
+#       on another port while doing initial setup
 cp virtuoso.ini /tmp/virtuoso.ini
 crudini --set /tmp/virtuoso.ini HTTPServer ServerPort 27015
 
@@ -57,28 +57,37 @@ then
   echo "`date +%Y-%m-%dT%H:%M:%S%:z`" >  .dba_pwd_set
 fi
 
+VIRTUOSO_DB_PASSWORD=${DBA_PASSWORD:-"dba"}
 if [ ! -f ".data_loaded" -a -d "toLoad" ] ;
 then
     echo "Start data loading from toLoad folder"
-    pwd="dba"
     graph="http://localhost:8890/DAV"
 
-    if [ "$DBA_PASSWORD" ]; then pwd="$DBA_PASSWORD" ; fi
     if [ "$DEFAULT_GRAPH" ]; then graph="$DEFAULT_GRAPH" ; fi
     echo "ld_dir('toLoad', '*', '$graph');" >> /load_data.sql
     echo "rdf_loader_run();" >> /load_data.sql
     echo "exec('checkpoint');" >> /load_data.sql
     echo "WAIT_FOR_CHILDREN; " >> /load_data.sql
     echo "$(cat /load_data.sql)"
-    virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P "$pwd" < /load_data.sql
+    virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P "$VIRTUOSO_DB_PASSWORD" < /load_data.sql
     kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
     echo "`date +%Y-%m-%dT%H:%M:%S%:z`" > .data_loaded
 fi
 
+if [ "$SPARQL_UPDATE" = "true" ];
+then
+    echo "WARNING: applying user rights workaround"
+    echo "DB.DBA.RDF_DEFAULT_USER_PERMS_SET ('nobody', 7);" > /sql-query.sql
+    echo "grant execute on DB.DBA.L_O_LOOK_NE to SPARQL_UPDATE;" > /sql-query.sql
+    virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P "$VIRTUOSO_DB_PASSWORD" < /sql-query.sql
+    rm /sql-query.sql
+fi
+
+
 if [ ! -z "$ENABLE_CORS" ];
 then
     echo "enabling cors on SPARQL endpoint"
-    virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P dba < /docker-virtuoso/add_cors.sql
+    virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P "$VIRTUOSO_DB_PASSWORD" < /docker-virtuoso/add_cors.sql
     kill $(ps aux | grep '[v]irtuoso-t' | awk '{print $2}')
 fi
 
