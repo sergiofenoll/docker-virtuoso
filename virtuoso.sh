@@ -78,7 +78,8 @@ if [ "$SPARQL_UPDATE" = "true" ];
 then
     echo "WARNING: applying user rights workaround"
     echo "DB.DBA.RDF_DEFAULT_USER_PERMS_SET ('nobody', 7);" > /sql-query.sql
-    echo "grant execute on DB.DBA.L_O_LOOK_NE to SPARQL_UPDATE;" > /sql-query.sql
+    echo "grant execute on DB.DBA.L_O_LOOK_NE to SPARQL_UPDATE;" >> /sql-query.sql
+    echo "shutdown();" >> /sql-query.sql
     virtuoso-t +configfile /tmp/virtuoso.ini +wait && isql-v -U dba -P "$VIRTUOSO_DB_PASSWORD" < /sql-query.sql
     rm /sql-query.sql
 fi
