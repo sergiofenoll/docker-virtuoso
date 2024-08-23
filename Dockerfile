@@ -2,12 +2,13 @@ FROM ubuntu:22.04 as builder
 
 ARG TARGETPLATFORM
 
-# Set Virtuoso commit SHA to Virtuoso 7.2.10 release (2023-06-07)
-ARG VIRTUOSO_COMMIT=f3d88f16bca4274265160e098be3ba3c7d68341c
+# Set Virtuoso commit SHA to Virtuoso 7.2.13 release (2024-06-10)
+ARG VIRTUOSO_COMMIT=a1fd8195bf1140797fefb7d0961c55739c0dd0d8
 
 RUN apt-get update
 RUN apt-get install -y build-essential autotools-dev autoconf automake net-tools libtool \
-                       flex bison gperf gawk m4 libssl-dev libreadline-dev openssl wget
+                       flex bison gperf gawk m4 libssl-dev libreadline-dev openssl wget \
+                       python-is-python3
 RUN wget https://github.com/openlink/virtuoso-opensource/archive/${VIRTUOSO_COMMIT}.tar.gz
 RUN tar xzf ${VIRTUOSO_COMMIT}.tar.gz
 WORKDIR virtuoso-opensource-${VIRTUOSO_COMMIT}
