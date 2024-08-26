@@ -136,12 +136,19 @@ docker exec -i virtuoso_container isql-v <<EOF
     exit;
 ```
 ## Restoring a backup
-To restore a backup, stop the running container and restore the database using a new container.
+
+Backups can be restored either in the running container, or through an environment variable.
+
+Caveat: The following commands mention `backup_` as the base prefix for the backups, this is the whole filename up to (but not including) the ending number and filename extension.  Eg: for a backup including the file `virtuoso_backup_240822T0200-101.bp`, the prefix is `virtuoso_backup_240822T0200-`.
+
+### Restoring in a separate container
+To restore a backup, stop the running container and restore the database using a new container or load the backup during startup.
 
 ```
 docker run --rm -it -v path-to-your-database:/data redpencil/virtuoso virtuoso-t +restore-backup backups/backup_ +configfile /data/virtuoso.ini
 ```
 
+### Restoring using environment variable
 The new container will exit once the backup has been restored, you can then restart the original db container.
 
 It is also possible to restore a backup placed in /data/backups using a environment variable. Using this approach the backup is loaded automatically on startup and it is not required to run a separate container.
@@ -152,10 +159,12 @@ docker run --name my-virtuoso \
             -p 1111:1111 \
             -e DBA_PASSWORD=dba \
             -e SPARQL_UPDATE=true \
-            -e BACKUP_PREFIX=backup_ \_
+            -e BACKUP_PREFIX=backup_ \
             -v path-to-your-database:/data \
             -d redpencil/virtuoso
 ```
+
+The backup will be ingested only once.
 
 ## Contributing
 
