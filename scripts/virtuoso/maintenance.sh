@@ -15,6 +15,13 @@ case $COMMAND in
     exec('checkpoint');
 EOF
         ;;
+    "shutdown")
+        isql-v -H $TRIPLESTORE -U $USERNAME -P $PASSWORD <<EOF
+    exec('checkpoint');
+    exec('shutdown');
+EOF
+        echo "Safely shutdown database. If docker-compose has restart: \"always\", database will now restart"
+        ;;
     "vacuum")
         isql-v -H $TRIPLESTORE -U $USERNAME -P $PASSWORD <<EOF
     DB.DBA.vacuum();
