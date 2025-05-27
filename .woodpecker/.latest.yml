@@ -10,4 +10,4 @@ pipeline:
 when:
   # all events except pull_request
   - event: [push, pull_request_closed, tag, release, deployment, cron, manual]
-    branch: master
+    branch: [master]
