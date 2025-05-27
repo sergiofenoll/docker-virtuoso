@@ -6,7 +6,11 @@ steps:
       tags: latest
       platforms: linux/amd64,linux/arm64
       purge: true
-    secrets: [ docker_username, docker_password ]
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+
 when:
   # all events except pull_request
   - event: [push, pull_request_closed, tag, release, deployment, cron, manual]
