@@ -1,4 +1,4 @@
-pipeline:
+steps:
   build-and-push-latest:
     image: woodpeckerci/plugin-docker-buildx
     settings:

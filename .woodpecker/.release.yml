@@ -1,4 +1,4 @@
-pipeline:
+steps:
   build-and-release:
     image: woodpeckerci/plugin-docker-buildx
     settings:
